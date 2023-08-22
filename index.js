@@ -1,6 +1,6 @@
+import'dotenv/config';
 import axios from 'axios';
 import express from 'express'
-import'dotenv/config.js';
 const { PORT, AIKEY, AIORG } = process.env
 
 
