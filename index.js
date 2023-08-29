@@ -1,4 +1,4 @@
-import'dotenv/config';
+import 'dotenv/config';
 import axios from 'axios';
 import express from 'express'
 const { PORT, AIKEY, AIORG } = process.env
@@ -19,24 +19,28 @@ app.listen(PORT, () =>
   console.log(`The Kroger API is running on: http://localhost:${PORT}.`)
 );
 
+app.options('/',(req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.end();
+  } )
 app.post('/', (req, response) => {
-    (req.body.description && req.body.bullets) &&
-        axios.post('https://api.openai.com/v1/chat/completions', {
-                model: 'gpt-4',
-                messages: [{
-                    role: 'system',
-                    content: 'You are a world class marketing copywriter.'
-                }, {
-                    role: 'user',
-                    content: `${req.body.description} and ${req.body.bullets}`
-                }],
-                max_tokens: 1000
+    axios.post('https://api.openai.com/v1/chat/completions', {
+            model: 'gpt-4',
+            messages: [{
+                role: 'system',
+                content: 'You are a world class marketing copywriter.'
             }, {
-                    headers: {
-                        'Authorization': `Bearer ${AIKEY}`,
-                        'OpenAI-Organization': AIORG
-                    }
-        }).then(res => {
-            response.json(res.data.choices)
-        }).catch(console.log)
+                role: 'user',
+                content: req.body.prompt
+            }],
+            max_tokens: 1000
+        }, {
+                headers: {
+                    'Authorization': `Bearer ${AIKEY}`,
+                    'OpenAI-Organization': AIORG
+                }
+    }).then(res => {
+        response.json(res.data.choices)
+    }).catch(console.log)
 });
