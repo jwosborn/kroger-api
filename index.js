@@ -35,12 +35,13 @@ app.post('/', (req, response) => {
                 content: req.body.prompt
             }],
             max_tokens: 1000
-        }, {
+        },
+        {
                 headers: {
                     'Authorization': `Bearer ${AIKEY}`,
                     'OpenAI-Organization': AIORG
                 }
     }).then(res => {
         response.json(res.data.choices)
-    }).catch(e => console.log(e.response.error))
+    }).catch(e => { console.log(e.response.error); return response.json(e.response); })
 });
