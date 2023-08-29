@@ -42,5 +42,5 @@ app.post('/', (req, response) => {
                 }
     }).then(res => {
         response.json(res.data.choices)
-    }).catch(console.log)
+    }).catch(e => console.log(e.response.error))
 });
